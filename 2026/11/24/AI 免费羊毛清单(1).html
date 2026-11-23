@@ -1,0 +1,669 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="color-scheme" content="light dark" />
+    <link rel="icon" href="data:," />
+    <title>AI 免费羊毛清单</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700;900&family=Noto+Serif+SC:wght@700;900&display=swap" rel="stylesheet" />
+    <style>
+      button, [role="button"], select, summary, input:not([type="checkbox"], [type="radio"]) { min-height: 2.25rem; }
+      * { box-sizing: border-box; }
+      :root {
+        --bg: #f4f6f3;
+        --card: #ffffff;
+        --ink: #1b231e;
+        --ink-2: #4c5a51;
+        --ink-3: #7d8a81;
+        --line: #dde3dc;
+        --green: #177245;
+        --green-soft: #e3f2e8;
+        --red: #c93a1c;
+        --red-soft: #fbe9e3;
+        --amber: #9a6a00;
+        --amber-soft: #fbf0d3;
+        --gray-soft: #edf0ec;
+        --shadow: 0 1px 2px rgba(20, 40, 28, .06), 0 6px 18px rgba(20, 40, 28, .05);
+      }
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --bg: #11150f;
+          --card: #1a201a;
+          --ink: #e9eee9;
+          --ink-2: #aebbb1;
+          --ink-3: #7e8c81;
+          --line: #2c352c;
+          --green: #4cc07f;
+          --green-soft: #1d2f24;
+          --red: #ff8a66;
+          --red-soft: #38211a;
+          --amber: #e5b84e;
+          --amber-soft: #332a14;
+          --gray-soft: #242b24;
+          --shadow: 0 1px 2px rgba(0,0,0,.35), 0 6px 18px rgba(0,0,0,.25);
+        }
+      }
+      html { scroll-behavior: smooth; }
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--ink);
+        font-family: "Noto Sans SC", "PingFang SC", "Microsoft YaHei", system-ui, sans-serif;
+        font-size: 15px;
+        line-height: 1.65;
+        -webkit-font-smoothing: antialiased;
+      }
+      .wrap { max-width: 1060px; margin: 0 auto; padding: 0 18px 64px; }
+      a { color: var(--green); }
+
+      /* ---------- 头部 ---------- */
+      header.hero { padding: 34px 0 8px; }
+      .hero h1 {
+        font-family: "Noto Serif SC", "Songti SC", serif;
+        font-size: clamp(30px, 6vw, 46px);
+        font-weight: 900;
+        margin: 0 0 10px;
+        letter-spacing: .01em;
+      }
+      .hero .lede { font-size: 16px; color: var(--ink-2); max-width: 46em; margin: 0; }
+      .hero .lede strong { color: var(--ink); }
+      .meta-row { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
+      .meta-chip {
+        font-size: 12.5px; font-weight: 500; color: var(--ink-2);
+        background: var(--card); border: 1px solid var(--line);
+        padding: 5px 11px; border-radius: 999px;
+      }
+      .meta-chip b { color: var(--red); font-weight: 700; }
+
+      /* ---------- 先领这 3 个 ---------- */
+      section { margin-top: 38px; }
+      h2.sec {
+        font-family: "Noto Serif SC", "Songti SC", serif;
+        font-size: 23px; font-weight: 900; margin: 0 0 6px;
+        display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap;
+      }
+      h2.sec .sub { font-family: "Noto Sans SC", sans-serif; font-size: 13px; font-weight: 500; color: var(--ink-3); }
+      .sec-note { color: var(--ink-2); font-size: 14px; margin: 0 0 16px; max-width: 52em; }
+      .top3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+      @media (max-width: 820px) { .top3 { grid-template-columns: 1fr; } }
+      .top-card {
+        background: var(--card); border: 1.5px dashed var(--green);
+        border-radius: 14px; padding: 18px 18px 14px; box-shadow: var(--shadow);
+        display: flex; flex-direction: column; gap: 8px;
+      }
+      .top-card .rank {
+        font-family: "Noto Serif SC", serif; font-size: 30px; font-weight: 900;
+        color: var(--red); line-height: 1;
+      }
+      .top-card h3 { margin: 0; font-size: 18px; font-weight: 900; }
+      .top-card .why { margin: 0; font-size: 13.5px; color: var(--ink-2); flex: 1; }
+      .top-card .gate { font-size: 12.5px; color: var(--ink-2); }
+      .top-card .gate b { color: var(--green); }
+      .claim-order {
+        margin-top: 14px; background: var(--green-soft); border-radius: 12px;
+        padding: 13px 16px; font-size: 14px;
+      }
+      .claim-order b { color: var(--green); }
+      .claim-order .alt { display: block; margin-top: 6px; color: var(--ink-2); font-size: 13px; }
+
+      /* ---------- 筛选 ---------- */
+      .filters {
+        position: sticky; top: 0; z-index: 20;
+        background: var(--bg);
+        padding: 14px 0 10px; margin-top: 34px;
+        border-bottom: 1px solid var(--line);
+      }
+      .filter-row { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+      .filter-row + .filter-row { margin-top: 8px; }
+      .chip {
+        appearance: none; border: 1px solid var(--line); background: var(--card);
+        color: var(--ink-2); font: inherit; font-size: 13.5px; font-weight: 500;
+        padding: 6px 14px; border-radius: 999px; cursor: pointer; min-height: 2.25rem;
+      }
+      .chip[aria-pressed="true"] { background: var(--ink); color: var(--bg); border-color: var(--ink); font-weight: 700; }
+      .chip:focus-visible, .search:focus-visible, a:focus-visible { outline: 2px solid var(--green); outline-offset: 2px; }
+      .search {
+        flex: 1 1 180px; font: inherit; font-size: 14px;
+        border: 1px solid var(--line); border-radius: 999px;
+        background: var(--card); color: var(--ink); padding: 7px 16px;
+      }
+      .count-line { font-size: 13px; color: var(--ink-3); margin: 10px 2px 0; }
+
+      /* ---------- 卡片 ---------- */
+      .grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; }
+      @media (max-width: 720px) { .grid { grid-template-columns: 1fr; } }
+      .card {
+        background: var(--card); border: 1px solid var(--line); border-radius: 14px;
+        padding: 16px 18px 13px; box-shadow: var(--shadow);
+        display: flex; flex-direction: column;
+      }
+      .card-head { display: flex; align-items: flex-start; gap: 8px; }
+      .card-head h3 { margin: 0; font-size: 16.5px; font-weight: 900; line-height: 1.35; flex: 1; }
+      .stamp {
+        flex: none; font-size: 11px; font-weight: 700; letter-spacing: .04em;
+        padding: 3px 8px; border-radius: 6px; transform: rotate(2deg);
+      }
+      .stamp.ok { color: var(--red); border: 1.5px solid var(--red); background: var(--red-soft); }
+      .stamp.un { color: var(--ink-3); border: 1px solid var(--line); background: var(--gray-soft); transform: none; }
+      .quota { margin: 8px 0 4px; font-size: 14.5px; }
+      .quota b { color: var(--green); font-weight: 700; }
+      .tags { display: flex; flex-wrap: wrap; gap: 6px; margin: 8px 0 2px; }
+      .tag {
+        font-size: 11.5px; font-weight: 500; padding: 2.5px 9px; border-radius: 999px;
+        background: var(--gray-soft); color: var(--ink-2);
+      }
+      .tag.good { background: var(--green-soft); color: var(--green); font-weight: 700; }
+      .tag.warn { background: var(--amber-soft); color: var(--amber); }
+      .tag.cat { background: transparent; border: 1px solid var(--line); }
+      dl.facts { margin: 10px 0 0; display: grid; grid-template-columns: auto 1fr; gap: 3px 12px; font-size: 13px; }
+      dl.facts dt { color: var(--ink-3); white-space: nowrap; }
+      dl.facts dd { margin: 0; color: var(--ink); }
+      .note {
+        margin: 10px 0 0; font-size: 12.5px; color: var(--ink-2);
+        background: var(--gray-soft); border-radius: 9px; padding: 8px 11px;
+      }
+      .note b { color: var(--red); }
+      .card-foot { margin-top: auto; padding-top: 12px; display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+      .src-link { font-size: 13px; font-weight: 500; text-decoration: none; padding: 6px 2px; }
+      .src-link:hover { text-decoration: underline; }
+      .tier-mark { font-size: 11px; font-weight: 700; color: var(--ink-3); letter-spacing: .06em; }
+      .empty { display: none; text-align: center; color: var(--ink-3); padding: 34px 0; font-size: 14px; }
+
+      /* ---------- B 档 ---------- */
+      .b-list { display: flex; flex-direction: column; gap: 10px; }
+      .b-item {
+        background: var(--card); border: 1px solid var(--line); border-left: 4px solid var(--amber);
+        border-radius: 10px; padding: 13px 16px;
+        display: grid; grid-template-columns: 1fr auto; gap: 4px 14px; align-items: start;
+      }
+      @media (max-width: 560px) { .b-item { grid-template-columns: 1fr; } }
+      .b-item h3 { margin: 0; font-size: 15.5px; font-weight: 900; }
+      .b-item .b-quota { font-size: 13.5px; color: var(--ink-2); margin-top: 2px; }
+      .b-item .b-gate { font-size: 13px; margin-top: 5px; }
+      .b-item .b-gate b { color: var(--amber); }
+      .b-item .src-link { justify-self: end; }
+      @media (max-width: 560px) { .b-item .src-link { justify-self: start; } }
+
+      /* ---------- 排除清单 ---------- */
+      .dead-list { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px 22px; }
+      @media (max-width: 720px) { .dead-list { grid-template-columns: 1fr; } }
+      .dead-list li {
+        font-size: 13.5px; color: var(--ink-2); padding: 9px 12px;
+        background: var(--card); border: 1px solid var(--line); border-radius: 9px;
+      }
+      .dead-list li b { color: var(--ink); text-decoration: line-through; text-decoration-color: var(--red); text-decoration-thickness: 1.5px; }
+
+      /* ---------- 页脚 ---------- */
+      footer { margin-top: 44px; border-top: 1px solid var(--line); padding-top: 18px; font-size: 12.5px; color: var(--ink-3); }
+      footer p { margin: 0 0 8px; max-width: 62em; }
+      footer b { color: var(--ink-2); }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+
+      <header class="hero">
+        <h1>AI 免费羊毛清单</h1>
+        <p class="lede">不用绑信用卡、只用 <strong>+86 手机号和邮箱</strong>就能领的 AI 免费额度：大模型 token、视频/图片生成、云算力三类全扫了一遍。按「对做视频和图片的实际价值」排序，<strong>先领最上面 3 个</strong>。</p>
+        <div class="meta-row">
+          <span class="meta-chip">调查截至 <b>2026 年 11 月 23 日</b></span>
+          <span class="meta-chip">A 档 = 免绑卡可直接领</span>
+          <span class="meta-chip">B 档 = 要绑卡或有其他门槛</span>
+          <span class="meta-chip">国内平台要<b>实名认证</b>（身份证/人脸），这和绑卡是两回事</span>
+        </div>
+      </header>
+
+      <section aria-labelledby="top3-title">
+        <h2 class="sec" id="top3-title">先领这 3 个 <span class="sub">按紧急程度和价值排</span></h2>
+        <div class="top3">
+          <article class="top-card">
+            <div class="rank">1</div>
+            <h3>腾讯 TokenHub</h3>
+            <p class="why">最急：<strong>活动 2026-12-31 截止</strong>。一次领取覆盖混元、DeepSeek、GLM、Kimi、MiniMax 等多家模型，还含生图、视频、3D 积分，适合横评选引擎。额度是「每模型各 100 万 token」还是「总量 100 万」、有效期 90 天还是 1 年，官方与二手口径冲突，领完先在控制台确认。</p>
+            <p class="gate">门槛：<b>免绑卡</b>，需腾讯云实名（+86）</p>
+            <a class="src-link" href="https://www.tencentcloud.com/techpedia/144120" target="_blank" rel="noopener">官方技术文章 ↗</a>
+          </article>
+          <article class="top-card">
+            <div class="rank">2</div>
+            <h3>阿里百炼（通义）</h3>
+            <p class="why">国内直连最稳的视频 API 入口：Wan 2.6 生图 50 张、文生/图生视频各 50 秒，Qwen 文本多数模型各 100 万 token、Qwen-Image 100 张。<strong>90 天从开通起算</strong>，开通前先开好「用尽即停」，别让时钟白跑。</p>
+            <p class="gate">门槛：<b>免绑卡</b>，需阿里云实名（+86）</p>
+            <a class="src-link" href="https://developer.aliyun.com/article/1758257" target="_blank" rel="noopener">来源：阿里云开发者社区 ↗</a>
+          </article>
+          <article class="top-card">
+            <div class="rank">3</div>
+            <h3>Google Flow（Veo 3.1）</h3>
+            <p class="why">本批免费档里单条质量和音画同步上限最高：<strong>每天 50 credits</strong>，Lite 档 10 credits 一条，一天能出 5 条 8 秒草稿。不领当天清零，越早开始每天试片越划算。高峰时段（约北京时间晚间）可能限流，Quality 档免费额度够不到。</p>
+            <p class="gate">门槛：<b>免绑卡</b>，Google 账号 + 梯子</p>
+            <a class="src-link" href="https://aitecharchive.com/articles/google-flow-50-free-credits-veo-3-1-guide-2026" target="_blank" rel="noopener">来源说明 ↗</a>
+          </article>
+        </div>
+        <div class="claim-order">
+          <b>同一天领取顺序：</b>TokenHub（防 12-31 截止）→ 百炼（确认要开工再开通，别浪费 90 天）→ Flow（当天额度当天用）→ 智谱 Flash（长期免费，随时领作兜底）→ 即梦 / Leonardo / PixVerse（每日签到养成）。
+          <span class="alt">完全不用梯子的话，把第 3 个换成「即梦每日积分 + 智谱 Flash 免费模型」组合：国内直连，每日刷新 + 长期免费双保险。</span>
+        </div>
+      </section>
+
+      <div class="filters" role="group" aria-label="筛选">
+        <div class="filter-row" id="cat-row">
+          <button class="chip" data-cat="all" aria-pressed="true">全部</button>
+          <button class="chip" data-cat="api" aria-pressed="false">大模型 API / Token</button>
+          <button class="chip" data-cat="media" aria-pressed="false">视频 · 图片生成</button>
+          <button class="chip" data-cat="gpu" aria-pressed="false">云算力 / GPU</button>
+        </div>
+        <div class="filter-row">
+          <button class="chip" id="f-verified" aria-pressed="false">只看已核实</button>
+          <button class="chip" id="f-daily" aria-pressed="false">每日刷新</button>
+          <button class="chip" id="f-noshiming" aria-pressed="false">不用实名</button>
+          <input class="search" id="f-search" type="search" placeholder="搜平台名，如 Seedance、FLUX、Groq…" aria-label="搜索平台" />
+        </div>
+        <p class="count-line" id="count-line"></p>
+      </div>
+
+      <section aria-labelledby="a-title">
+        <h2 class="sec" id="a-title">A 档 · 免绑卡可直接领</h2>
+        <p class="sec-note">「已核实」= 2026-11-23 当天打开官方页面亲自确认过；「未核实」= 来自二手来源的整理（多称在 2026 年 10–11 月核对过官方页），领之前以账号控制台里实际显示的数字为准。</p>
+        <div class="grid" id="a-grid"></div>
+        <p class="empty" id="a-empty">没有符合当前筛选的条目，换个条件试试。</p>
+      </section>
+
+      <section aria-labelledby="b-title">
+        <h2 class="sec" id="b-title">B 档 · 要绑卡或其他门槛</h2>
+        <p class="sec-note">这些不是不能用，而是对没有信用卡的人门槛真实存在，先看清再决定，不用白费功夫注册。</p>
+        <div class="b-list" id="b-list"></div>
+      </section>
+
+      <section aria-labelledby="dead-title">
+        <h2 class="sec" id="dead-title">别再惦记的 <span class="sub">已停服 / 已无免费档，网上旧攻略还在传</span></h2>
+        <ul class="dead-list">
+          <li><b>Sora</b> — 消费端 2026-04-26 已停服，API 定于 2026-09-24 停用，无免费档。</li>
+          <li><b>Luma Dream Machine</b> — 2026-10-01 起定价页已无免费档，Plus $25/月起。</li>
+          <li><b>Midjourney</b> — 无免费试用、无免费档，Basic $10/月起。</li>
+          <li><b>Pika</b> — 免费档 0 credits/月，只剩付费包。</li>
+          <li><b>海螺 Hailuo 每日积分</b> — 每日免费积分已取消，免费档每月 0 积分，只剩注册一次性体验积分。</li>
+          <li><b>DeepSeek 官方 API 免费额度</b> — 官方无固定赠送，网传「500 万 token」没有官方出处，须实名 + 预充值。</li>
+          <li><b>GitHub Models</b> — 已于 2026 年 7 月退役（二手口径）。</li>
+          <li><b>Together $25 免费 / Cerebras 永久免费</b> — 均已被 2026 年 10–11 月官方口径推翻，见 B 档。</li>
+        </ul>
+      </section>
+
+      <section aria-labelledby="have-title">
+        <h2 class="sec" id="have-title">你已经有的 <span class="sub">本次未发现 2026 年 11 月政策变化，不重复列</span></h2>
+        <p class="sec-note">Google Colab 免费版、Kaggle（GPU 需证件验证）、Lightning AI 5 credits、URnetwork、Parallel MCP 免费档照旧。只有 ModelScope 有一条口径变化，已放进 A 档卡片里标注：GPU 免费时长官方有 32 / 36 小时两种说法，且是总额度、用完为止，不是每月续发。</p>
+      </section>
+
+      <footer>
+        <p><b>关于「未核实」：</b>除 OpenRouter、Kimi、Novita 三处在 2026-11-23 当天打开官方页面确认外，其余条目均为二手来源整理，报告中统一标「未核实」（fal 仅其 Seedance 周末活动页经文本抓取确认，沙箱每日额度仍是二手口径，故卡片标未核实）。多数境外平台是否接受 +86 手机号注册未逐一实测，短信验证偶发失败的可能没有排除。</p>
+        <p><b>关于商用：</b>多数免费产出的商用许可未在官方页确证（明确的例外：Wan 开源权重 Apache 2.0 可商用自托管、Adobe Firefly 自有模型商用安全；即梦、Vidu 免费档口径为不可商用）。拿去商用前，先重读对应平台当时的条款。</p>
+        <p><b>关于数字：</b>免费额度政策变化极快，本页是 2026-11-23 的快照，一切以领取时账号内显示为准。凡正文标注「口径冲突」处（TokenHub、Kimi 代金券、智谱实名、Modal 等），按控制台实际显示处理。</p>
+      </footer>
+
+    </div>
+
+    <script>
+      var A_ITEMS = [
+        {
+          name: "腾讯 TokenHub（混元等）", cats: ["api", "media"], verified: false, shiming: true, vpn: false, daily: false,
+          quota: "官方文表列 <b>18 个语言/多模态模型各 100 万 token</b>；二手口径另有生图每模型 50 张、视频每模型 50 积分、3D 每项 100 积分",
+          period: "官方文表 90 天 / 另一口径 1 年（冲突）",
+          gate: "免绑卡；须腾讯云实名认证",
+          access: "+86，国内直连",
+          note: "<b>口径冲突：</b>「总量 100 万」与「每模型独立 100 万」两种说法并存，以控制台为准。活动持续至 <b>2026-12-31</b>，须在此前领取；超额默认停服不扣费（开后付费需手动）。",
+          src: "https://www.tencentcloud.com/techpedia/144120", srcName: "腾讯云官方技术文章"
+        },
+        {
+          name: "阿里百炼（通义千问 / Wan）", cats: ["api", "media"], verified: false, shiming: true, vpn: false, daily: false,
+          quota: "新用户多数模型 <b>各 100 万 token</b>；Qwen-Image 生图 100 张；Wan 2.6 生图 50 张、文生/图生视频各 50 秒",
+          period: "开通后 90 天",
+          gate: "免绑卡；须实名认证才发放",
+          access: "+86，阿里云账号，国内直连",
+          note: "用完默认转按量付费，务必先手动开「用尽即停 / 安心试用」；免费额度仅华北 2（北京）地域模型享有（二手口径）；部分旗舰模型已无免费额度。",
+          src: "https://developer.aliyun.com/article/1758257", srcName: "阿里云开发者社区"
+        },
+        {
+          name: "智谱 BigModel / Z.ai（Flash 免费模型）", cats: ["api", "media"], verified: false, shiming: false, vpn: false, daily: false,
+          quota: "文本 <b>glm-4.7-flash</b>、看图 glm-4.6v-flash、文生图 cogview-3-flash、生视频 cogvideox-flash，输入输出均标<b>「免费」</b>",
+          period: "免费模型未标截止日（长期口径）",
+          gate: "免绑卡；实名说法冲突（有官方 FAQ 口径称不强制，也有称需身份验证，按需实名准备）",
+          access: "+86 手机号/邮箱，国内直连",
+          note: "免费模型限的是并发、不是每日次数，具体并发看控制台。另有新用户 2000 万 token 体验包说法，与 8 月实测 1800 万资源包冲突。旧模型名 GLM-4.5-Flash、GLM-Z1-Flash 已下线，别再用。",
+          src: "https://www.sanbot.top/blog/zhipu-glm-free-api-guide/", srcName: "来源整理（二手）"
+        },
+        {
+          name: "Google Flow（Veo 3.1）", cats: ["media"], verified: false, shiming: false, vpn: true, daily: true,
+          quota: "<b>每日 50 credits</b>（有无订阅都一样）；Lite 10 / 条、Fast 20 / 条、Quality 100 / 条（免费档做不了 Quality）",
+          period: "每日刷新，不结转",
+          gate: "免绑卡；Google 账号即可",
+          access: "邮箱注册；国内需梯子；+86 验证偶发，待核对",
+          note: "带 SynthID 隐形水印；高峰时段（约 14:00–17:00 UTC）非订阅用户可能无法生成视频；免费用户不能用 Omni Flash、1080p，也不能买额外 credits。另 Google Vids 个人账号每月 10 条。",
+          src: "https://aitecharchive.com/articles/google-flow-50-free-credits-veo-3-1-guide-2026", srcName: "来源说明（二手）"
+        },
+        {
+          name: "即梦 AI / Dreamina（Seedance）", cats: ["media"], verified: false, shiming: false, vpn: false, daily: true,
+          quota: "免费用户 <b>每日 120 积分</b>；Seedance 2.0 按 17 积分/秒、2.0 Fast 8 积分/秒、Mini 5 积分/秒可用",
+          period: "每日刷新",
+          gate: "免绑卡；手机号/邮箱注册",
+          access: "+86（国内版）国内直连；国际版邮箱/Google",
+          note: "<b>别拿 2.5 当主力预期：</b>Seedance 2.5 720p 要 37 积分/秒、最短 4 秒 = 148 积分，一天额度做不了一条。带水印，免费档不可商用口径为主；国内即梦早期口径 60–100 积分/日，与 120 冲突，以界面为准。",
+          src: "https://cicadas.ai/zh/blog/is-seedance-2-5-free", srcName: "来源整理（二手）"
+        },
+        {
+          name: "Cloudflare Workers AI", cats: ["api", "media", "gpu"], verified: false, shiming: false, vpn: true, daily: true,
+          quota: "<b>每日 10,000 Neurons</b>，可跑 LLM（Llama / Qwen / Gemma / Kimi 等）和图像模型（FLUX schnell/klein、SDXL 等）",
+          period: "每日 00:00 UTC 重置",
+          gate: "免绑卡；邮箱 + Cloudflare 账号",
+          access: "邮箱注册；国内访问大概率需梯子",
+          note: "免费档超额直接报错、不自动扣费，放心试。FLUX 出图按 tile×step 计费，保守估算约 40–57 张 1024 图/天（旧文 104–173 张是误算）。需要一点动手能力接 API。",
+          src: "https://blog.laozhang.ai/en/posts/free-ai-image-generation-api", srcName: "来源整理（二手）"
+        },
+        {
+          name: "OpenRouter（:free 模型）", cats: ["api"], verified: true, shiming: false, vpn: false, daily: false,
+          quota: "<b>:free 模型 $0 / token，无 token 上限</b>；另有小额新用户 allowance（FAQ 原文未确证数额）",
+          period: "长期，免费模型名单轮换常变",
+          gate: "免绑卡（只用 :free 模型可不购卡）",
+          access: "邮箱 / GitHub 注册；+86 未确证",
+          note: "限速：未购卡 <b>50 请求/天</b>，累计购满 10 credits 后升到 1000 请求/天；约 20 RPM（二手口径）。部分模型提供方可能用你的 prompt 做训练，介意就避开。",
+          src: "https://openrouter.ai/docs/faq", srcName: "官方 FAQ（已核实）"
+        },
+        {
+          name: "Kimi 开放平台", cats: ["api"], verified: true, shiming: true, vpn: false, daily: false,
+          quota: "新用户 <b>15 元代金券</b>",
+          period: "自发放起 3 个月",
+          gate: "免绑卡；须国内手机号注册 + 实名认证后发放",
+          access: "+86 手机号（明确），国内直连",
+          note: "<b>口径冲突：</b>官方原文称代金券不可用于 Kimi K3、须充值解锁；但 2026-11-18 二手实测称可用券调 K3.1 Pro / K3（高速版除外），以控制台为准。用完余额为 0 返回 403，不会欠费；速率档位较低。",
+          src: "https://www.kimi.com/help/kimi-api/api-free-trial", srcName: "官方帮助中心（已核实）"
+        },
+        {
+          name: "火山方舟（豆包）", cats: ["api", "media"], verified: false, shiming: true, vpn: false, daily: false,
+          quota: "每模型 <b>50 万 token</b> 一次性；Seedream-5.0-lite 生图 50 张、4.5 / 4.0 各 200 张；语音合成 5000 字符；Doubao-Lite 永久免费",
+          period: "一次性，无固定到期日",
+          gate: "免绑卡；免费额度领取有「无需先实名」口径，付费续用须实名 + 充值（口径有冲突）",
+          access: "+86，火山引擎账号，国内直连",
+          note: "<b>关键坑：「安心体验」默认关闭</b>，须首次开通时手动打开，关闭后不可重开；不开的话额度用完自动转按量付费。免费额度仅抵在线推理。另有「每日签到 200 万 token」说法，未确证。",
+          src: "https://jidan.si/guide/volcengine-ark-free-quota", srcName: "来源整理（二手）"
+        },
+        {
+          name: "百度千帆（文心等）", cats: ["api"], verified: false, shiming: true, vpn: false, daily: false,
+          quota: "<b>17 个指定模型各 100 万 token，合计 1700 万</b>（含 ERNIE-4.5-Turbo、DeepSeek、Kimi-K2、Qwen3 等）",
+          period: "3 个月（自首次开通起）",
+          gate: "免绑卡；须百度智能云实名认证（二手口径为主）",
+          access: "+86，国内直连",
+          note: "仅抵在线推理，不抵批量推理。",
+          src: "https://www.tgjai.cn/article/free-ai-quota-20261109.html", srcName: "来源整理（二手）"
+        },
+        {
+          name: "硅基流动 SiliconFlow", cats: ["api", "media"], verified: false, shiming: true, vpn: false, daily: false,
+          quota: "定价页标「免费」的模型 <b>$0 调用</b>（含 Kolors 生图、OCR、语音/向量等，名单轮换）；实名后可手动领 <b>16 元通用代金券</b>",
+          period: "代金券 180 天；活动至 2026-12-31（二手口径）",
+          gate: "免绑卡；须实名认证才能用免费模型 / 领券",
+          access: "+86 手机号，国内直连",
+          note: "免费模型固定限速，升付费档也不会提高免费模型的限速。",
+          src: "https://www.toukenai.com/free-tokens", srcName: "来源整理（二手）"
+        },
+        {
+          name: "Groq（Free Plan）", cats: ["api"], verified: false, shiming: false, vpn: false, daily: true,
+          quota: "按模型限速：gpt-oss-120b / 20b、Qwen 约 <b>30 RPM、1000 请求/天</b>；Llama 3.1 8B 高达 14,400 请求/天；Whisper 2000 请求/天",
+          period: "长期，按日重置",
+          gate: "免绑卡（二手口径：只有升级 Developer 才需 payment method）",
+          access: "邮箱注册；+86 待核对",
+          note: "限速按组织算、不按 key 算；数据默认不保留。速度是它的招牌，适合做实时/批量文本活。",
+          src: "https://apidog.com/blog/free-ai-api/", srcName: "来源整理（二手）"
+        },
+        {
+          name: "Google Gemini API（AI Studio）", cats: ["api"], verified: false, shiming: false, vpn: true, daily: false,
+          quota: "Gemini Flash / Flash-Lite、2.5 Pro/Flash、Gemma 等<b>免费调用</b>；<b>图像与视频模型仅付费，无免费档</b>",
+          period: "长期",
+          gate: "免绑卡，无需 billing 账户",
+          access: "Google 账号（Gmail）；国内需梯子；+86 手机号验证偶发，待核对",
+          note: "免费档数据可能被用于改进产品（EEA/UK/CH 除外）。RPM/RPD/TPM 官方不再公开数字，须进 AI Studio 里看自己账号的实际限额。",
+          src: "https://dev.to/hassann/gemini-api-free-tier-in-2026-limits-models-and-when-you-get-billed-4081", srcName: "来源整理（二手）"
+        },
+        {
+          name: "Mistral La Plateforme（Free mode）", cats: ["api"], verified: false, shiming: false, vpn: true, daily: false,
+          quota: "Free mode 默认开启，官方已不再公布金额（2026-09 曾标 $10/月，10 月撤下；旧口径约 10 亿 token/月仅供参考）",
+          period: "长期",
+          gate: "免绑卡（官方原话 no credit card required，二手引述）；须手机验证",
+          access: "邮箱注册；手机验证是否接受 +86 待核对；国内需梯子",
+          note: "Free mode 数据可能用于训练（是否须 opt-in 口径不一）。",
+          src: "https://freellmcredits.com/guides/free-ai-credits-october-2026", srcName: "来源整理（二手）"
+        },
+        {
+          name: "NVIDIA NIM（build.nvidia.com）", cats: ["api"], verified: false, shiming: false, vpn: true, daily: false,
+          quota: "<b>100+ 模型</b>可调，多数模型 40 RPM；日请求数官方不公布",
+          period: "长期",
+          gate: "免绑卡；须加入免费 NVIDIA Developer Program",
+          access: "邮箱注册；手机验证口径不一；国内需梯子",
+          note: "提示词可能被记录 / 用于训练。旧文说的「10000 次/天」官方已不展示，别当真。",
+          src: "https://freellmcredits.com/guides/free-ai-credits-october-2026", srcName: "来源整理（二手）"
+        },
+        {
+          name: "Leonardo.Ai", cats: ["media"], verified: false, shiming: false, vpn: true, daily: true,
+          quota: "<b>每日 150 tokens</b>，可用于图像或视频生成",
+          period: "每日，未用完过期",
+          gate: "免绑卡（二手未明示绑卡要求）",
+          access: "邮箱注册；国内需梯子",
+          note: "免费图无水印口径（二手称不加水印）；视频仅部分模型可用；商用条款未确证。",
+          src: "https://www.layer3labs.io/guides/best-ai-video-generators", srcName: "来源整理（二手）"
+        },
+        {
+          name: "Ideogram", cats: ["media"], verified: false, shiming: false, vpn: false, daily: false,
+          quota: "免费档 <b>每周 30 credits</b>；Low 3 / 张、Medium 6 / 张、High 10 / 张",
+          period: "每周刷新",
+          gate: "免绑卡",
+          access: "须用 Google / Apple / Microsoft 登录才给免费 credits，邮箱密码注册没有",
+          note: "强项是图中文字排版。免费生成默认公开，私人生成和导出要付费。",
+          src: "https://ai-atlas-tools.com/compare/ideogram-vs-midjourney/", srcName: "来源整理（二手）"
+        },
+        {
+          name: "PixVerse", cats: ["media"], verified: false, shiming: false, vpn: true, daily: true,
+          quota: "注册 <b>60 credits</b> + <b>每日 30 credits</b>",
+          period: "每日 00:00 UTC 重置，未用完过期",
+          gate: "免绑卡",
+          access: "邮箱注册；国内需梯子",
+          note: "免费档 ≤540p、带水印；Seedance / Kling 等高级模型要 Pro+ 才解锁。",
+          src: "https://www.saastrials.com/guides/free-ai-video-generators", srcName: "来源整理（二手）"
+        },
+        {
+          name: "Vidu（生数）", cats: ["media"], verified: false, shiming: false, vpn: false, daily: true,
+          quota: "注册试用积分 + <b>每日登录积分（数额不公布）</b>；每月 10 次参考生视频",
+          period: "长期免费档",
+          gate: "免绑卡",
+          access: "邮箱注册；国内版国内直连",
+          note: "免费档不可商用，付费档才行。网传「错峰无限 200 条/天」是 Ultimate 付费档，别信旧文。",
+          src: "https://www.zemith.com/zh/learn/vidu-pricing", srcName: "来源整理（二手）"
+        },
+        {
+          name: "豆包 App / 网页", cats: ["media"], verified: false, shiming: false, vpn: false, daily: true,
+          quota: "视频 <b>每日约 10 次额度</b>（10 秒扣 2 次口径，2026 年中）；生图 / P 图免费，次数未公开",
+          period: "每日",
+          gate: "免绑卡",
+          access: "+86，国内直连",
+          note: "带水印、商用条款未确证。电脑版 Seedance 2.5 最长可做 30 秒。",
+          src: "https://ylem.si/zh/products/doubao/", srcName: "来源整理（二手）"
+        },
+        {
+          name: "通义万相 Wan（wan.video）", cats: ["media"], verified: false, shiming: false, vpn: false, daily: true,
+          quota: "免费档 <b>每日签到积分（数额不公布）</b>、1 并发、6 种图像风格；API 额度见「阿里百炼」卡",
+          period: "签到每日",
+          gate: "免绑卡（网页版）；API 侧须阿里云实名",
+          access: "+86；wan.video 为美元计价国际站，需核对",
+          note: "免费档带水印、仅测试无商用。想商用又免费：开源 Wan 2.1 / 2.2 权重 Apache 2.0，可自托管商用；Wan 3.0 无开源权重。",
+          src: "https://aliteq.com/is-wan-3-free", srcName: "来源整理（二手）"
+        },
+        {
+          name: "fal 沙箱（Wan 3 / H3 Max / Grok Imagine）", cats: ["media"], verified: false, shiming: false, vpn: true, daily: true,
+          quota: "沙箱限定：Wan 3 <b>每日 5 条</b> 720p 带音频、H3 Max 每日 5 条 5 秒、Grok Imagine Lite 每日 5 条（各二手口径）；<b>API 不免费</b>",
+          period: "每 24 小时滚动重置",
+          gate: "免绑卡；邮箱注册",
+          access: "邮箱；国内需梯子",
+          note: "只能在沙箱里手工试片，不能接 API 批量跑。fal 上的 Seedance 2.5 周末免费（5 条 × 10 秒 480p）已于北京时间 2026-11-23 15:59 截止，别再按它排计划。",
+          src: "https://fal.ai/seedance-2.5", srcName: "fal 官方页 + 二手口径"
+        },
+        {
+          name: "Adobe Firefly", cats: ["media"], verified: false, shiming: false, vpn: true, daily: true,
+          quota: "免费账号 <b>每日免费生成（数额不公布）</b>，图 / 视频 / 音频每日刷新；视频约 5 秒",
+          period: "每日",
+          gate: "免绑卡；Adobe 账号",
+          access: "邮箱；国内需梯子",
+          note: "<b>不加水印</b>（官方口径），这点在免费档里少见。Adobe 自有模型商用安全，合作伙伴模型要付费 credits，商用资格按模型分。",
+          src: "https://www.saastrials.com/guides/free-image-to-video-ai", srcName: "来源整理（二手）"
+        },
+        {
+          name: "Runway（一次性额度）", cats: ["media"], verified: false, shiming: false, vpn: true, daily: false,
+          quota: "免费档 <b>一次性 125 credits，不续期、不过期</b>；约够 Gen-4.5 10 秒或 Turbo 25 秒，或 1080p 图约 15 张",
+          period: "一次性",
+          gate: "免绑卡",
+          access: "邮箱；国内需梯子",
+          note: "只够试界面和提示词手感，别指望出正片。",
+          src: "https://efreedirectory.com/runway-free-plan-limits/", srcName: "来源整理（二手）"
+        },
+        {
+          name: "Novita Sandbox（CPU 沙箱）", cats: ["gpu"], verified: true, shiming: false, vpn: false, daily: false,
+          quota: "新用户完成 setup 问卷得 <b>$100 推广 credits</b>，仅用于 Sandbox 的 CPU / 内存 / 存储",
+          period: "有效期官方未明示（有 90 天二手口径，未确证）",
+          gate: "免绑卡（官方原文：No credit card required）",
+          access: "邮箱注册；+86 待核对",
+          note: "<b>明确不适用于 GPU 和模型 API</b>，别拿它当算力领。沙箱单次最长 1 小时、最多 5 并发、2 vCPU / 4GB，适合跑脚本类杂活。",
+          src: "https://docs.novita.ai/guides/sandbox-pricing", srcName: "官方文档（已核实）"
+        },
+        {
+          name: "Hugging Face ZeroGPU", cats: ["gpu"], verified: false, shiming: false, vpn: false, daily: true,
+          quota: "免费账号 <b>每日 5 分钟 ZeroGPU</b>，可建 2 个 Gradio Space；Hub 浏览 / 托管免费",
+          period: "每日",
+          gate: "免绑卡",
+          access: "邮箱注册",
+          note: "额度极小，只够跑 demo、排队试个图。注意：HF 的 Inference Providers 免费账号是 0 credits，在 B 档，别混淆。",
+          src: "https://klymentiev.com/blog/huggingface-inference-api", srcName: "来源整理（二手）"
+        },
+        {
+          name: "国家超算 SCNet", cats: ["api"], verified: false, shiming: true, vpn: false, daily: false,
+          quota: "新用户 <b>1 亿 tokens</b>（限科学计算智能体 / 旗舰模型）+ 客户端内旗舰模型不限量（至 11-30）",
+          period: "不限量至 2026-11-30；会场档期至 12-31 口径冲突，按 11-30 规划",
+          gate: "免绑卡；须实名 + 下载最新版客户端（Win / macOS / Android）",
+          access: "+86 实名，国内直连",
+          note: "<b>仅客户端内可用，不是通用 API</b>，接不进自己的代码和工具。对视频/图片创作价值低，只作文字/科研辅助，顺手领即可。",
+          src: "https://www.tgjai.cn/article/free-ai-quota-20261109.html", srcName: "来源整理（二手）"
+        },
+        {
+          name: "ModelScope 魔搭（已有资源 · 口径变化）", cats: ["gpu"], verified: false, shiming: true, vpn: false, daily: false, existing: true,
+          quota: "CPU 8 核 32G 长期免费；GPU A10 24G 约 <b>36 小时总额</b>（另有 32 小时口径，冲突）、单次最长 10 小时、空闲 1 小时断开",
+          period: "总额度，用完为止，不是每月续发",
+          gate: "免绑卡；须绑阿里云账号",
+          access: "+86，国内直连",
+          note: "这是你已经在用的，只提示口径变化。另有 AMD 激励计划最高 1000+ 小时，但要发文 / Notebook / 创空间过评审，不是直接领。",
+          src: "https://www.618a.com/modelscope-notebook-not-a-vps.html", srcName: "来源整理（二手）"
+        }
+      ];
+
+      var B_ITEMS = [
+        { name: "Cerebras", quota: "$5 试用（gpt-oss-120b / qwen-3.8-27b），5 RPM、1M token/天", gate: "须 verified payment method，否则 Playground / API 不激活；不自动扣费，过期或用完即停。无永久免费档。", period: "30 天", src: "https://grabaicredits.com/en/deals/cerebras-inference-free-trial" },
+        { name: "Modal", quota: "Starter 每月 $30 算力（约 T4 50 小时）", gate: "口径冲突：多源称免卡，但 2026-11-02 有修正称官方 billing guide 要求 payment method on file 才能用、GPU 更是必须。无卡先按要绑卡处理，别指望。", period: "每月续", src: "https://www.anchorterminal.com/tools/modal" },
+        { name: "Fireworks AI", quota: "$1 一次性额度；另有 Muse Glimmer 30B 的 LoRA 微调免费至 2026-11-30（免卡口径，二手）", gate: "起步免卡，但 $1 用完即暂停，必须绑卡 + 购卡才能续用；无卡时限速 10 RPM。", period: "$1 无官方过期日", src: "https://buildaicurrent.com/credits/fireworks-free-credit/" },
+        { name: "Together AI", quota: "已无免费试用", gate: "首次最低充值 $15（另有 $5 口径冲突），须卡 / ACH。网上流传的 $25、$5 免费说法已过期，直接排除免费档。", period: "—", src: "https://grabaicredits.com/en/deals/together-ai-signup-credits" },
+        { name: "Hugging Face Inference Providers", quota: "免费账号 0 credits", gate: "须购卡充值，或订 PRO $9/月（含 $2 credits）。免费能用的只有 A 档的 ZeroGPU。", period: "—", src: "https://aionx.co/ai-comparisons/huggingface-inference-api/" },
+        { name: "RunPod", quota: "Bonus $5–$500（多数人 $5）", gate: "须先充值 $10 + Google 登录才给 bonus；没有常驻免费档。", period: "—", src: "https://startupperks.co/best/free-gpu-cloud-credits" },
+        { name: "Replicate", quota: "无固定免费档，精选模型偶尔免费", gate: "须先设置 billing，按次计费。", period: "—", src: "https://www.beam.cloud/blog/best-replicate-alternatives" },
+        { name: "Cerebrium", quota: "Hobby 计划本身免费", gate: "算力全部另行计费，没有注册 credits——等于没有免费算力。", period: "—", src: "https://startupperks.co/best/free-gpu-cloud-credits" },
+        { name: "FLUX 官方（Black Forest Labs）", quota: "无免费档，1 credit = $0.01", gate: "须购卡充值。真正免费的是 FLUX 开源权重自托管，或走 Cloudflare Workers AI 的免费额度（见 A 档）。", period: "—", src: "https://useaiforx.com/tool/flux-playground/" }
+      ];
+
+      var CAT_LABEL = { api: "API / Token", media: "视频 · 图片", gpu: "算力" };
+
+      function esc(s) {
+        return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+      }
+
+      function cardHTML(it) {
+        var tags = "";
+        it.cats.forEach(function (c) { tags += '<span class="tag cat">' + CAT_LABEL[c] + "</span>"; });
+        tags += '<span class="tag good">免绑卡</span>';
+        if (it.daily) tags += '<span class="tag">每日刷新</span>';
+        if (it.shiming) tags += '<span class="tag warn">需实名</span>';
+        if (it.vpn) tags += '<span class="tag warn">需梯子</span>';
+        if (it.existing) tags += '<span class="tag">已有资源</span>';
+        var stamp = it.verified
+          ? '<span class="stamp ok">已核实</span>'
+          : '<span class="stamp un">未核实</span>';
+        var note = it.note ? '<p class="note">' + it.note + "</p>" : "";
+        return '<article class="card">' +
+          '<div class="card-head"><h3>' + esc(it.name) + "</h3>" + stamp + "</div>" +
+          '<p class="quota">' + it.quota + "</p>" +
+          '<div class="tags">' + tags + "</div>" +
+          '<dl class="facts">' +
+          "<dt>有效期</dt><dd>" + esc(it.period) + "</dd>" +
+          "<dt>门槛</dt><dd>" + esc(it.gate) + "</dd>" +
+          "<dt>注册</dt><dd>" + esc(it.access) + "</dd>" +
+          "</dl>" + note +
+          '<div class="card-foot"><a class="src-link" href="' + it.src + '" target="_blank" rel="noopener">' + esc(it.srcName) + " ↗</a>" +
+          '<span class="tier-mark">A 档</span></div></article>';
+      }
+
+      function bHTML(it) {
+        return '<article class="b-item"><div>' +
+          "<h3>" + esc(it.name) + '</h3><div class="b-quota">' + esc(it.quota) + " · 有效期：" + esc(it.period) + "</div>" +
+          '<div class="b-gate"><b>门槛：</b>' + esc(it.gate) + "</div></div>" +
+          '<a class="src-link" href="' + it.src + '" target="_blank" rel="noopener">来源 ↗</a></article>';
+      }
+
+      var grid = document.getElementById("a-grid");
+      var blist = document.getElementById("b-list");
+      grid.innerHTML = A_ITEMS.map(cardHTML).join("");
+      blist.innerHTML = B_ITEMS.map(bHTML).join("");
+      var cards = Array.prototype.slice.call(grid.children);
+
+      var state = { cat: "all", verified: false, daily: false, noshiming: false, q: "" };
+
+      function apply() {
+        var shown = 0;
+        cards.forEach(function (el, i) {
+          var it = A_ITEMS[i];
+          var ok = true;
+          if (state.cat !== "all" && it.cats.indexOf(state.cat) === -1) ok = false;
+          if (state.verified && !it.verified) ok = false;
+          if (state.daily && !it.daily) ok = false;
+          if (state.noshiming && it.shiming) ok = false;
+          if (state.q && it.name.toLowerCase().indexOf(state.q) === -1 &&
+              (it.quota + it.note).toLowerCase().indexOf(state.q) === -1) ok = false;
+          el.style.display = ok ? "" : "none";
+          if (ok) shown++;
+        });
+        document.getElementById("a-empty").style.display = shown ? "none" : "block";
+        document.getElementById("count-line").textContent =
+          "A 档共 " + A_ITEMS.length + " 条，当前显示 " + shown + " 条；B 档 " + B_ITEMS.length + " 条在下方。";
+      }
+
+      document.getElementById("cat-row").addEventListener("click", function (e) {
+        var btn = e.target.closest("button[data-cat]");
+        if (!btn) return;
+        state.cat = btn.getAttribute("data-cat");
+        Array.prototype.forEach.call(this.querySelectorAll("button"), function (b) {
+          b.setAttribute("aria-pressed", b === btn ? "true" : "false");
+        });
+        apply();
+      });
+
+      function bindToggle(id, key) {
+        var el = document.getElementById(id);
+        el.addEventListener("click", function () {
+          state[key] = !state[key];
+          el.setAttribute("aria-pressed", state[key] ? "true" : "false");
+          apply();
+        });
+      }
+      bindToggle("f-verified", "verified");
+      bindToggle("f-daily", "daily");
+      bindToggle("f-noshiming", "noshiming");
+
+      document.getElementById("f-search").addEventListener("input", function () {
+        state.q = this.value.trim().toLowerCase();
+        apply();
+      });
+
+      apply();
+    </script>
+  </body>
+</html>
